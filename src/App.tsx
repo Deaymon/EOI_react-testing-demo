@@ -1,24 +1,59 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import { getFiveUsers } from './services/userService';
 import './App.css';
 
+interface UserInterface {
+  "id": number,
+  "name": string,
+  "username": string,
+  "email": string,
+  "address": {
+      "street": string,
+      "suite": string,
+      "city": string,
+      "zipcode": string,
+      "geo": {
+          "lat": string,
+          "lng": string
+      }
+  },
+  "phone": string,
+  "website": string,
+  "company": {
+      "name": string,
+      "catchPhrase": string,
+      "bs": string
+  }
+} 
+
 function App() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    async function getInitUsers() {
+      let initUsers = await getFiveUsers();
+      initUsers = await initUsers.json();
+      setUsers(initUsers);
+    }
+    getInitUsers();
+  }, [])
+
+  // useEffect(() => {
+  //   console.log(users)
+  // }, [users]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {users ? users.map((user: UserInterface) => (
+        <div key={user.id}>
+          <p data-testid='test-user'>{user.name}</p>
+        </div>
+      ))
+      : (
+        <div>
+          <p>No hay usuarios</p>
+        </div>
+      )}
     </div>
   );
 }

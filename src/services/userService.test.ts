@@ -1,4 +1,5 @@
-import { getUsers } from "./userService";
+import { Console } from "console";
+import { getUsers, getFiveUsers } from "./userService";
 
 const mockedSuccessResponse = '::mockedSuccessResponse::';
 const mockedFetch = {
@@ -18,6 +19,15 @@ describe('getUsers', () => {
         (global.fetch as jest.Mock).mockImplementation(() => Promise.resolve(mockedFetch));
         const fetchCall = await getUsers();
 
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+        expect(fetchCall).toEqual(mockedFetch);
+    });
+});
+
+describe('getFiveUsers', () => {
+    test('should call getFiveUsers and return five users', async () => {
+        (global.fetch as jest.Mock).mockImplementation(() => Promise.resolve(mockedFetch));
+        const fetchCall = await getFiveUsers();
         expect(global.fetch).toHaveBeenCalledTimes(1);
         expect(fetchCall).toEqual(mockedFetch);
     });
